@@ -1,5 +1,7 @@
 import * as React from "react";
+import { useWindowDimensions } from "react-native";
 import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg";
+
 const FinalScreenIllustrationIcon = (props: SvgProps) => (
   <Svg width={283} height={313} fill="none" {...props}>
     <G clipPath="url(#a)">

@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+  useWindowDimensions,
+} from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import CustomButton from "@/src/components/CustomButton";
 import WeightScreenIllustrationIcon from "@/src/icons/WeightScreenIllustrationIcon";
@@ -10,6 +18,9 @@ const WeightScreen = () => {
   const [weight, setWeightValue] = useState<string>("65.0");
   const [unit, setUnit] = useState<string>("kg");
   const [iconWidth, setIconWidth] = useState<number>(0);
+  const { width, height } = useWindowDimensions();
+
+  const isLandscape: boolean = width > height;
 
   const weights = Array.from({ length: 2000 }, (_, i) => ({
     label: `${(i / 10).toFixed(1)}`,
@@ -26,23 +37,25 @@ const WeightScreen = () => {
   const handleNext = async () => {};
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Image
-          source={require("../../assets/WeightScreenBackgroundImage.jpg")}
-          style={styles.backgroundImage}
-        />
-        <View
-          onLayout={(event) => {
-            const { width } = event.nativeEvent.layout;
-            setIconWidth(width);
-          }}
-        >
-          <WeightScreenIllustrationIcon />
+    <SafeAreaView style={styles.container}>
+      <Image
+        source={require("../../assets/WeightScreenBackgroundImage.jpg")}
+        style={styles.backgroundImage}
+      />
+      {!isLandscape && (
+        <View style={styles.imageContainer}>
+          <View
+            onLayout={(event) => {
+              const { width } = event.nativeEvent.layout;
+              setIconWidth(width);
+            }}
+          >
+            <WeightScreenIllustrationIcon />
+          </View>
         </View>
-      </View>
+      )}
       <View style={styles.contentContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity style={styles.backButtonContainer}>
           <View>
             <MaterialIcons
               name="keyboard-arrow-left"
@@ -65,7 +78,7 @@ const WeightScreen = () => {
         </View>
         <View>
           <Text style={styles.title}>Wat is je huidige gewicht?</Text>
-          <View>
+          <View style={styles.pickerWrapper}>
             <View style={styles.pickerContainer}>
               <RNPickerSelect
                 onValueChange={(value) => setWeightValue(value)}
@@ -97,21 +110,46 @@ const WeightScreen = () => {
           />
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    position: "relative",
+  },
+  imageContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 16,
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
+    width: "100%",
+    top: 0,
+    left: 0,
+    height: "100%",
   },
   contentContainer: {
     backgroundColor: colors.white,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    marginHorizontal: 16,
+    padding: 16,
+  },
+  backButtonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    paddingVertical: 8,
   },
   backButtonText: {
     color: colors.greenSalad,
@@ -122,6 +160,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.lightGray,
+    marginTop: 8,
+    padding: 8,
+    flexDirection: "row",
+    gap: 4,
   },
   progressLineContainer: {
     backgroundColor: colors.lightGray,
@@ -140,11 +182,18 @@ const styles = StyleSheet.create({
   title: {
     textAlign: "center",
     color: colors.greenKale,
+    marginVertical: 8,
+  },
+  pickerWrapper: {
+    flexDirection: "row",
+    gap: 8,
+    marginVertical: 8,
   },
   pickerContainer: {
     borderTopLeftRadius: 25,
     borderBottomLeftRadius: 25,
     backgroundColor: colors.white,
+    flexGrow: 2,
   },
   pickerContainerRight: {
     borderTopRightRadius: 25,
@@ -153,6 +202,7 @@ const styles = StyleSheet.create({
     shadowColor: colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 10,
+    flexGrow: 0,
   },
   separator: {
     color: colors.greenKale,
@@ -160,6 +210,7 @@ const styles = StyleSheet.create({
   infoText: {
     color: colors.gray,
     textAlign: "center",
+    marginVertical: 8,
   },
   button: {
     backgroundColor: colors.greenSalad,
@@ -168,7 +219,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: colors.white,
     fontFamily: "Poppins-Medium",
+    paddingVertical: 8,
   },
 });
-
 export default WeightScreen;
