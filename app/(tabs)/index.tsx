@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import CustomButton from "@/src/components/CustomButton";
@@ -7,9 +7,9 @@ import { colors } from "@/src/utils/colors";
 import { MaterialIcons } from "@expo/vector-icons";
 
 const WeightScreen = () => {
-  const [weight, setWeightValue] = useState("65.0");
-  const [unit, setUnit] = useState("kg");
-  const [iconWidth, setIconWidth] = useState(0);
+  const [weight, setWeightValue] = useState<string>("65.0");
+  const [unit, setUnit] = useState<string>("kg");
+  const [iconWidth, setIconWidth] = useState<number>(0);
 
   const weights = Array.from({ length: 2000 }, (_, i) => ({
     label: `${(i / 10).toFixed(1)}`,
@@ -21,13 +21,9 @@ const WeightScreen = () => {
     { label: "lbs", value: "lbs" },
   ];
 
-  const formatWeight = (value, unit) => {
-    
-  };
+  const formatWeight = (value: string, unit: string) => `${value} ${unit}`;
 
-  const handleNext = async () => {
-    
-  };
+  const handleNext = async () => {};
 
   return (
     <View style={styles.container}>

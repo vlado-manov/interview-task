@@ -1,5 +1,11 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
-import { View, TextInput, StyleSheet, ViewStyle } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../utils/colors";
 
@@ -9,8 +15,8 @@ interface CustomInputProps {
   onChangeText: Dispatch<SetStateAction<string>>;
   secureTextEntry?: boolean;
   style?: ViewStyle;
-  styleInput?: ViewStyle;
-  icon?: string;
+  styleInput?: TextStyle;
+  icon?: keyof typeof Ionicons.glyphMap;
   iconOnPress?: () => void;
 }
 
@@ -42,7 +48,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
           styles.input,
           isFocused && styles.inputFocused,
           styles.primaryShadow,
-          styleInput
+          styleInput,
         ]}
         value={value}
         onChangeText={onChangeText}

@@ -1,13 +1,7 @@
-import * as React from "react"
-import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg"
+import * as React from "react";
+import Svg, { SvgProps, G, Path, Defs, ClipPath } from "react-native-svg";
 const WeightScreenIllustrationIcon = (props: SvgProps) => (
-  <Svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={176}
-    height={238}
-    fill="none"
-    {...props}
-  >
+  <Svg width={176} height={238} fill="none" {...props}>
     <G clipPath="url(#a)">
       <Path
         fill="#F7F3B6"
@@ -110,5 +104,5 @@ const WeightScreenIllustrationIcon = (props: SvgProps) => (
       </ClipPath>
     </Defs>
   </Svg>
-)
-export default WeightScreenIllustrationIcon
+);
+export default WeightScreenIllustrationIcon;
