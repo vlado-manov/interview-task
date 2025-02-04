@@ -13,11 +13,15 @@ import CustomButton from "@/src/components/CustomButton";
 import WeightScreenIllustrationIcon from "@/src/icons/WeightScreenIllustrationIcon";
 import { colors } from "@/src/utils/colors";
 import { MaterialIcons } from "@expo/vector-icons";
+import SignUp from "./signUp";
+import { Provider } from "react-redux";
+import { store } from "@/src/store";
 
 const WeightScreen = () => {
   const [weight, setWeightValue] = useState<string>("65.0");
   const [unit, setUnit] = useState<string>("kg");
   const [iconWidth, setIconWidth] = useState<number>(0);
+  const [modalVisible, setModalVisible] = useState(false);
   const { width, height } = useWindowDimensions();
 
   const isLandscape: boolean = width > height;
@@ -37,80 +41,93 @@ const WeightScreen = () => {
   const handleNext = async () => {};
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Image
-        source={require("../../assets/WeightScreenBackgroundImage.jpg")}
-        style={styles.backgroundImage}
-      />
-      {!isLandscape && (
-        <View style={styles.imageContainer}>
-          <View
-            onLayout={(event) => {
-              const { width } = event.nativeEvent.layout;
-              setIconWidth(width);
-            }}
+    <Provider store={store}>
+      <SafeAreaView style={styles.container}>
+        {modalVisible && <SignUp setModalVisible={setModalVisible} />}
+        <TouchableOpacity
+          style={styles.signUpButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text
+            style={isLandscape ? styles.signUpTextLandscape : styles.signUpText}
           >
-            <WeightScreenIllustrationIcon />
+            Sign Up
+          </Text>
+        </TouchableOpacity>
+        <Image
+          source={require("../../assets/WeightScreenBackgroundImage.jpg")}
+          style={styles.backgroundImage}
+        />
+        {!isLandscape && (
+          <View style={styles.imageContainer}>
+            <View
+              onLayout={(event) => {
+                const { width } = event.nativeEvent.layout;
+                setIconWidth(width);
+              }}
+            >
+              <WeightScreenIllustrationIcon />
+            </View>
           </View>
-        </View>
-      )}
-      <View style={styles.contentContainer}>
-        <TouchableOpacity style={styles.backButtonContainer}>
+        )}
+        <View style={styles.contentContainer}>
+          <TouchableOpacity style={styles.backButtonContainer}>
+            <View>
+              <MaterialIcons
+                name="keyboard-arrow-left"
+                size={24}
+                color={colors.greenSalad}
+              />
+            </View>
+            <Text style={styles.backButtonText}>Vorige vraag</Text>
+          </TouchableOpacity>
+          <View style={styles.topContainer}>
+            <Text style={styles.subtitle}>
+              Laten we mekaar beter leren kennen!
+            </Text>
+            <View>
+              <View style={styles.progressLineContainer}>
+                <View />
+              </View>
+              <Text style={styles.progressText}>6</Text>
+            </View>
+          </View>
           <View>
-            <MaterialIcons
-              name="keyboard-arrow-left"
-              size={24}
-              color={colors.greenSalad}
+            <Text style={styles.title}>Wat is je huidige gewicht?</Text>
+            <View style={styles.pickerWrapper}>
+              <View style={styles.pickerContainer}>
+                <RNPickerSelect
+                  onValueChange={(value) => setWeightValue(value)}
+                  items={weights}
+                  value={weight}
+                  useNativeAndroidPickerStyle={false}
+                />
+              </View>
+              <View style={styles.pickerContainerRight}>
+                <RNPickerSelect
+                  onValueChange={(value) => setUnit(value)}
+                  items={units}
+                  value={unit}
+                  useNativeAndroidPickerStyle={false}
+                />
+              </View>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.infoText}>
+              We gebruiken je info om je macro’s te berekenen voor je
+              gepersonaliseerd wekelijks menu.
+            </Text>
+            <CustomButton
+              title="VOLGENDE"
+              onPress={handleNext}
+              style={styles.button}
+              textStyle={styles.buttonText}
             />
           </View>
-          <Text style={styles.backButtonText}>Vorige vraag</Text>
-        </TouchableOpacity>
-        <View style={styles.topContainer}>
-          <Text style={styles.subtitle}>
-            Laten we mekaar beter leren kennen!
-          </Text>
-          <View>
-            <View style={styles.progressLineContainer}>
-              <View />
-            </View>
-            <Text style={styles.progressText}>6</Text>
-          </View>
         </View>
-        <View>
-          <Text style={styles.title}>Wat is je huidige gewicht?</Text>
-          <View style={styles.pickerWrapper}>
-            <View style={styles.pickerContainer}>
-              <RNPickerSelect
-                onValueChange={(value) => setWeightValue(value)}
-                items={weights}
-                value={weight}
-                useNativeAndroidPickerStyle={false}
-              />
-            </View>
-            <View style={styles.pickerContainerRight}>
-              <RNPickerSelect
-                onValueChange={(value) => setUnit(value)}
-                items={units}
-                value={unit}
-                useNativeAndroidPickerStyle={false}
-              />
-            </View>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.infoText}>
-            We gebruiken je info om je macro’s te berekenen voor je
-            gepersonaliseerd wekelijks menu.
-          </Text>
-          <CustomButton
-            title="VOLGENDE"
-            onPress={handleNext}
-            style={styles.button}
-            textStyle={styles.buttonText}
-          />
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </Provider>
   );
 };
 
@@ -122,6 +139,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: "100%",
     position: "relative",
+  },
+  signUpButton: {
+    position: "absolute",
+    top: 16,
+    left: 16,
+    zIndex: 2,
+  },
+  signUpText: {
+    color: colors.white,
+    fontSize: 24,
+  },
+  signUpTextLandscape: {
+    color: colors.white,
+    fontSize: 14,
   },
   imageContainer: {
     width: "100%",
